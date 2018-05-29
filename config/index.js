@@ -6,10 +6,10 @@ var settings = {
     database   : {
         protocol : "mysql:", // or "mysql"
         query    : { pool: true },
-        host     : "127.0.0.1",
-        database : "scalelabs",
-        user     : "root",
-        password : "password"
+        host     : "sql12.freesqldatabase.com" || "127.0.0.1",
+        database : "sql12240354" ||"scalelabs",
+        user     : "sql12240354" || "root",
+        password : "n6i46Sxlj6" || "password"
     }
 };
 

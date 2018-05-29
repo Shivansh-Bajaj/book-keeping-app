@@ -313,7 +313,7 @@ router.post('/csvupload', function (req, res) {
         }, (err) => {
             console.log("error", err);
         }, (err) => {
-            if(Object.keys(err).length !== 0) {
+            if(Object.keys(error).length !== 0) {
                 res.status(200).send({
                     "status": "partial",
                     "error": error
