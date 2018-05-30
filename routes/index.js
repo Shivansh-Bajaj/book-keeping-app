@@ -116,7 +116,7 @@ router.delete('/author', function (req, res) {
 router.get('/publisher/nameall', function (req, res) {
     publisher(req.models).get({}).then(async function (result) {
         let data = result.map((element) => {
-            return {text: element.title, id: element.id, title: element.title}
+            return {text: element.title, id: element.title, title: element.title}
         });
         await res.status(200).json({
             "status": "success",
@@ -195,23 +195,69 @@ router.delete('/publisher', function (req, res) {
 
 
 router.get('/book', function (req, res) {
-    if(!req.query.hasOwnProperty('q')) {
-        book(req.models).get(req.query).then(result => {
+    if(!req.query.hasOwnProperty('q') || req.query.q === undefined ||
+    req.query.q === null || req.query.q === "") {
+        book(req.models).get().then(result => {
             res.status(200).json({
                 "status": "success",
                 "data": result
             })
         })
     } else {
-        req.db.driver.execQuery('ALTER TABLE book ADD FULLTEXT (name, info);', function (err, data) {
-            if (!err) {
-                let query = "SELECT * FROM book WHERE MATCH (name,info) AGAINST ('\\"+req.query.q+"*' IN Boolean MODE);";
-                req.db.driver.execQuery(query, function (error, data) {
-                    console.log(error, data);
-                    res.status(200).json({
-                        "status": "success",
-                        "error": data
+        // " ALTER TABLE authors ADD FULLTEXT (`title`, `info`);"
+        req.db.driver.execQuery("ALTER TABLE book ADD FULLTEXT (title, isbn, image_url, book_edition);", function (err) {
+            if(!err) {
+                req.db.driver.execQuery("ALTER TABLE author ADD FULLTEXT (name, info);", function (err) {
+                    if (!err) {
+                        req.db.driver.execQuery("ALTER TABLE publisher ADD FULLTEXT (title, info);", function (err) {
+                            if (!err) {
+                                let query = "SELECT *, MATCH(book.title, book.isbn, book.image_url, book.book_edition) AGAINST('Rowling') as tscore, " +
+                                    "MATCH(author.name, author.info) AGAINST('Rowling') as ascore, " +
+                                    "MATCH(publisher.title, publisher.info) AGAINST(?) as pscore " +
+                                    "FROM book " +
+                                    "LEFT JOIN book_authors ON book.id = book_authors.book_id " +
+                                    "LEFT JOIN author ON book_authors.authors_id = author.id " +
+                                    "LEFT JOIN publisher ON book.publisher_id = publisher.id " +
+                                    "WHERE " +
+                                    "MATCH(book.title, book.isbn, book.image_url, book.book_edition) AGAINST(?) " +
+                                    "OR MATCH(author.name, author.info) AGAINST(?) " +
+                                    "OR MATCH(publisher.title, publisher.info) AGAINST(?) " +
+                                    "ORDER BY (tscore + ascore+pscore) DESC; ";
+                                req.db.driver.execQuery(query, [req.query.q, req.query.q, req.query.q, req.query.q, req.query.q, req.query.q], async function (error, data) {
+                                    console.log(error, data);
+                                    if(!error){
+                                        let query = data.map((element) => {
+                                            return element.id;
+                                        });
+                                        await book(req.models).get({id: query}).then(result => {
+                                            res.status(200).json({
+                                                "status": "success",
+                                                "data": result
+                                            })
+                                        });
+
+                                    } else {
+                                        res.status(200).json({
+                                            "status": "success",
+                                            "data": data
+                                        })
+                                    }
+                                })
+                            } else {
+                                console.log(err);
+                                res.status(500).json({
+                                    "status": "fail",
+                                    "error": err
+                                })
+                            }
                     })
+                    } else {
+                        console.log(err);
+                        res.status(500).json({
+                            "status": "fail",
+                            "error": err
+                        })
+                    }
                 })
             } else {
                 console.log(err);
@@ -220,7 +266,7 @@ router.get('/book', function (req, res) {
                     "error": err
                 })
             }
-        })
+    })
     }
 });
 

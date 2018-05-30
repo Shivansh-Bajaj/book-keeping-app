@@ -21,7 +21,7 @@ class UpdateBookForm extends React.Component {
 
     handleSubmit(event) {
         alert('A name was submitted: ' + this.state.title);
-        fetch('http://localhost:3000/api/book', {
+        fetch('/api/book', {
             method: 'PUT',
             headers: {
                 "Content-Type": "application/json"

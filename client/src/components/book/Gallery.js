@@ -23,7 +23,7 @@ class Gallery extends Component {
     // }
 
     delete (item) {
-        fetch('http://localhost:3000/api/book',
+        fetch('/api/book',
             {
                 method: 'DELETE',
                 headers: {

@@ -27,11 +27,11 @@ class BookExplorerView extends Component {
         this.uploadHandleHide = this.uploadHandleHide.bind(this);
         this.search = this.search.bind(this);
         this.state = {
-            query: '',
+            query: "",
             show: false,
             uploadshow: false,
             items: []
-        }
+        };
         this.search();
     }
     handleShow() {
@@ -49,8 +49,9 @@ class BookExplorerView extends Component {
         this.setState({ uploadshow: false });
     }
     search() {
-        const BASE_URL = 'http://localhost:3000/api/book';
-        fetch(`${BASE_URL}`, { method: 'GET'})
+        const BASE_URL = '/api/book?q='+ this.state.query;
+        console.log(BASE_URL);
+        fetch(BASE_URL, { method: 'GET'})
             .then(response => response.json())
             .then(json => {
                 let { data } = json;

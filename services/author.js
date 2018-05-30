@@ -58,7 +58,7 @@ module.exports = function (models) {
                             }
                         }
                     })
-                }, function (err, data) {
+                }, function (err) {
                     if(err) {
                         reject(err);
                     } else {

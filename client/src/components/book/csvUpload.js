@@ -19,7 +19,7 @@ class UploadCompoonent extends React.Component {
         const data = new FormData();
         data.append('file', this.uploadInput.files[0]);
         this.setState({loading: true});
-        fetch('http://localhost:3000/api/csvupload', {
+        fetch('/api/csvupload', {
             method: 'POST',
             body: data,
         }).then((response) => {
@@ -45,7 +45,6 @@ class UploadCompoonent extends React.Component {
                 <div>
                     <Button onClick={this.handleUpload} bsStyle={"success"}>Upload</Button>
                 </div>
-                <img show={this.state.loading} src="http://localhost:3000/loading.gif" style={{margin: 'auto'}}/>
             </form>
         );
     }

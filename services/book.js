@@ -11,8 +11,8 @@ module.exports = function (models) {
             return new Promise((resolve, reject) => {
                 async.auto({
                     createAuthors: function (cb) {
-                        if(data.hasOwnProperty('author')) {
-                            author(models).getOrCreateBulk(data['author'])
+                        if(data.hasOwnProperty('authors')) {
+                            author(models).getOrCreateBulk(data['authors'])
                                 .then(result => {
                                     cb(null,result);
                                 })

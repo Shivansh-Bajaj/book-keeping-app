@@ -25,17 +25,19 @@ class BookForm extends React.Component {
     }
 
     handleAuthors(authors) {
-        this.setState({authors: authors});
-        console.log(this.state);
+        this.setState({authors: authors}, () => {
+            console.log(this.state);
+        });
+        
     }
 
     handlePublisher(publisher) {
-        this.setState({publisher: publisher.name});
+        this.setState({publisher: publisher});
         console.log(this.state);
     }
 
     handleSubmit(event) {
-        fetch('http://localhost:3000/api/book', {
+        fetch('/api/book', {
             method: 'POST',
             headers: {
                 "Content-Type": "application/json"
@@ -50,7 +52,6 @@ class BookForm extends React.Component {
         }).then(() => {
             window.location.reload();
         });
-        event.preventDefault();
     }
 
     render() {
@@ -112,8 +113,8 @@ class BookForm extends React.Component {
                             value={this.state.price}
                             onChange={this.handleChange}
                         />
-                        <Button style={{display: 'flex', justifyContent: 'center'}} bsStyle="success" bsSize="large" onClick={this.handleShow}>
-                            Launch demo modal
+                        <Button style={{display: 'flex', justifyContent: 'center'}} bsStyle="success" bsSize="large" onClick={this.handleSubmit}>
+                            add book
                         </Button>
                     </form>
                     </Panel.Body>
