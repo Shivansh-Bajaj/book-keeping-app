@@ -13,7 +13,7 @@ function setup(db, cb) {
 
 module.exports = function (cb) {
     if (connection) return cb(null, connection);
-    console.log(settings.database[process.env.environment]);
+    console.log(settings.database[process.env.environment],  process.env.environment);
 
     orm.connect(settings.database[process.env.environment], function (err, db) {
         if (err) return cb(err);
