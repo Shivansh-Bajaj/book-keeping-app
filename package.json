@@ -4,8 +4,8 @@
   "private": true,
   "scripts": {
     "reset": "node db-reset.js",
-    "dbsync": "node db-sync.js",
-    "prestart": "node db-sync.js",
+    "dbsync": "node dbsync.js",
+    "prestart": "node dbsync.js",
     "postinstall": "cd client && npm install",
     "start": "node ./bin/www"
   },
