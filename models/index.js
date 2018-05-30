@@ -13,9 +13,9 @@ function setup(db, cb) {
 
 module.exports = function (cb) {
     if (connection) return cb(null, connection);
-    console.log(settings);
+    console.log(settings.database[process.env.environment]);
 
-    orm.connect(settings.database, function (err, db) {
+    orm.connect(settings.database[process.env.environment], function (err, db) {
         if (err) return cb(err);
         connection = db;
         db.settings.set('instance.returnAllErrors', true);
